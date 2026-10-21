@@ -19,7 +19,7 @@ const config = loadConfig();
 const toSpecRoute = (r) => r.replace(/\[(\w+)\]/g, ":$1");
 
 // 실패 종류 → 복귀 단계 (R3 확정표)
-const BACK = { pii: "S4", price: "S4", open: "S4", token: "S4", tokenCss: "S3", route: "S2", scope: "S4", build: "S4", req: "S1", spec: "S2" };
+const BACK = { pii: "S4", price: "S4", open: "S4", token: "S4", tokenCss: "S3", route: "S2", scope: "S4", build: "S4", builtCss: "S4", req: "S1", spec: "S2" };
 
 const results = [];
 const fail = (gate, rule, where, msg) => {
@@ -97,8 +97,21 @@ function g4() {
         fail("G4", "build", `npm run ${script}`, `실패\n${tail}`);
       }
     }
+    checkBuiltCss();
   }
   return `라우트 ${found.length}개, 검사 파일 ${files.length}개${noBuild ? ", build·lint 생략" : ""}`;
+}
+
+// ⑧ 빌드 결과 CSS에 토큰이 실제로 들어갔는지 (tokens.css import가 빠지거나 캐시가 낡으면
+//    Tailwind 기본 테마가 남아 p-16 = 64px처럼 그려진다)
+function checkBuiltCss() {
+  const dir = ".next/static";
+  const css = listFiles(dir, /\.css$/).map(readText).join("\n");
+  if (!css) return fail("G4", "builtCss", dir, "빌드 결과에 CSS 파일이 없음");
+  const used = [...expectedThemeVars(config).keys()].filter((k) => css.includes(`${k}:`));
+  if (!used.some((k) => k.startsWith("--color-"))) fail("G4", "builtCss", dir, "빌드 CSS에 색 토큰(--color-*)이 없음");
+  if (!used.some((k) => k.startsWith("--spacing-"))) fail("G4", "builtCss", dir, "빌드 CSS에 간격 토큰(--spacing-*)이 없음");
+  if (/--spacing:\s*[\d.]/.test(css)) fail("G4", "builtCss", dir, "빌드 CSS에 Tailwind 기본 간격(--spacing)이 남아 있음 (토큰이 적용되지 않음)");
 }
 
 // ---------- 실행 ----------
