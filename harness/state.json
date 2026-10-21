@@ -1,0 +1,6 @@
+{
+  "branch": null,
+  "lastPassed": null,
+  "retries": { "S1": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 0 },
+  "approvedS2": false
+}
