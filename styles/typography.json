@@ -1,0 +1,17 @@
+{
+  "source": "figma BcRdHdiAoGUJujJTh1Dvxg 4189:8046 get_variable_defs",
+  "lineHeight": {
+    "font-size/heading-h2": 40,
+    "font-size/heading-h3": 32,
+    "font-size/heading-h4": 28,
+    "font-size/subtitle": 26,
+    "font-size/body": 24,
+    "font-size/body-small": 21,
+    "font-size/caption": 18
+  },
+  "fontWeight": {
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700
+  }
+}
