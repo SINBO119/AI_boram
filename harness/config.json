@@ -1,0 +1,41 @@
+{
+  "screens": [
+    { "id": "recommend", "name": "요금제 추천 페이지", "route": "/plans/recommend" },
+    { "id": "analysis", "name": "사용 패턴 분석", "route": "/plans/recommend/analysis" },
+    { "id": "result", "name": "맞춤 요금제 추천 결과", "route": "/plans/recommend/result" },
+    { "id": "list", "name": "요금제 목록", "route": "/plans" },
+    { "id": "detail", "name": "요금제 상세", "route": "/plans/[planId]" }
+  ],
+  "extraRoutesAllowed": ["/"],
+  "sources": {
+    "prd": "docs/PRD.md",
+    "screenSpec": "docs/screen-spec.md",
+    "tokens": "docs/token.json",
+    "typography": "styles/typography.json",
+    "tokensCss": "styles/tokens.css",
+    "globalsCss": "app/globals.css",
+    "requirements": "harness/out/s1-requirements.md",
+    "report": "harness/out/s5-report.md",
+    "moneyFormatter": "app/_lib/format.ts"
+  },
+  "figma": {
+    "screens": "https://www.figma.com/design/BcRdHdiAoGUJujJTh1Dvxg/?node-id=4189-8046",
+    "fileKey": "BcRdHdiAoGUJujJTh1Dvxg",
+    "nodeId": "4189:8046"
+  },
+  "protected": ["docs/", "reference/", "scripts/", ".claude/", "harness/config.json", "CLAUDE.md", "AGENTS.md"],
+  "protectedExceptions": ["docs/screen-spec.md"],
+  "agents": {
+    "main": { "write": ["harness/state.json"] },
+    "req-extractor": { "stage": "S1", "write": ["harness/out/"] },
+    "screen-spec": { "stage": "S2", "write": ["docs/screen-spec.md"] },
+    "token-builder": { "stage": "S3", "write": ["styles/"] },
+    "screen-builder": { "stage": "S4", "write": ["app/"] },
+    "verifier": {
+      "stage": "S5",
+      "write": [],
+      "bash": ["^node scripts/verify\\.mjs( --gate G[1-4])?( --no-build)?$", "^npm run (build|lint)$"]
+    }
+  },
+  "maxRetries": 3
+}
